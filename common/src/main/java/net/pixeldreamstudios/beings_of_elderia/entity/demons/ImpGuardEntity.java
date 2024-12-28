@@ -31,7 +31,7 @@ public class ImpGuardEntity extends AbstractDemonEntity {
                 .add(Attributes.MAX_HEALTH, BeingsOfElderia.config.impGuardHealth)
                 .add(Attributes.ATTACK_DAMAGE, BeingsOfElderia.config.impGuardAttackDamage)
                 .add(Attributes.ARMOR, BeingsOfElderia.config.impGuardArmor)
-                .add(Attributes.MOVEMENT_SPEED, 0.2)
+                .add(Attributes.MOVEMENT_SPEED, 0.3)
                 .add(Attributes.FOLLOW_RANGE, 64);
     }
 

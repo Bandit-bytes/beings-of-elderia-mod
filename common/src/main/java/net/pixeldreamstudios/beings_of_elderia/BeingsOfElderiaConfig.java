@@ -17,14 +17,14 @@ public class BeingsOfElderiaConfig {
     public double impHealth = 10.0;
     @Configurable
     @Configurable.Synchronized
-    public double impAttackDamage = 4.0;
+    public double impAttackDamage = 3.0;
 
     @Configurable
     @Configurable.Synchronized
     public double impGuardHealth = 20.0;
     @Configurable
     @Configurable.Synchronized
-    public double impGuardAttackDamage = 6.0;
+    public double impGuardAttackDamage = 5.0;
     @Configurable
     @Configurable.Synchronized
     public double impGuardArmor = 6.0;

@@ -82,7 +82,7 @@ public class ImpEntity extends AbstractDemonEntity {
         return Monster.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, BeingsOfElderia.config.impHealth)
                 .add(Attributes.ATTACK_DAMAGE, BeingsOfElderia.config.impAttackDamage)
-                .add(Attributes.MOVEMENT_SPEED, 0.2)
+                .add(Attributes.MOVEMENT_SPEED, 0.3)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.5)
                 .add(Attributes.FOLLOW_RANGE, 64);
     }
@@ -94,10 +94,13 @@ public class ImpEntity extends AbstractDemonEntity {
 
                 new SetWalkTargetToAttackTarget<>().speedMod(this::stalkOrHideSpeedMod),
 
-                // Attack logic
+                // Add jumping attack behavior
                 new AnimatableMeleeAttack<>(12)
                         .attackInterval(mob -> isAxeWielder() ? 40 : 20)
                         .whenStarting(mob -> {
+                            if (isCloseToTarget(mob.getTarget())) {
+                                performJumpAtTarget(mob.getTarget());
+                            }
                             if (isAxeWielder()) {
                                 this.triggerAnim("attackController", "attack");
                             } else {
@@ -106,6 +109,33 @@ public class ImpEntity extends AbstractDemonEntity {
                         })
         );
     }
+    private boolean isCloseToTarget(LivingEntity target) {
+        if (target == null) return false;
+        double distance = this.distanceTo(target);
+        return distance > 2.0 && distance < 8.0;
+    }
+
+    private void performJumpAtTarget(LivingEntity target) {
+        if (target == null) return;
+
+        double dx = target.getX() - this.getX();
+        double dz = target.getZ() - this.getZ();
+        double dy = target.getY() - this.getY();
+
+        double distance = Math.sqrt(dx * dx + dz * dz);
+
+        // Set jump motion
+        this.setDeltaMovement(
+                dx / distance * 0.4,
+                0.5 + (dy > 0 ? dy * 0.2 : 0),
+                dz / distance * 0.4
+        );
+
+        this.hasImpulse = true;
+//        this.level().playSound(null, this.getX(), this.getY(), this.getZ(),
+//                BeingsOfElderia.SOUND_JUMP_ATTACK, this.getSoundSource(), 1.0F, 1.0F); possible custom sound in future?
+    }
+
 
     /**
      * Custom speed modifier for stalking or hiding behavior based on the target's visibility.
